@@ -4,6 +4,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
+import { authService, firebaseInstance } from "../fbase";
 
 const Auth = () => {
   const [email, setEmail] = useState("");
@@ -34,6 +35,16 @@ const Auth = () => {
   };
 
   const toggleAccount = () => setNewAccount((prev) => !prev);
+  const onSocialClick = async (event) => {
+    const {
+      target: { name },
+    } = event;
+    let provider;
+    if (name === "google") {
+      provider = new firebaseInstance.auth.GoogleAuthProvider();
+    }
+    const data = await authService.signInWithPopup(provider);
+  };
 
   return (
     <div>
@@ -64,7 +75,9 @@ const Auth = () => {
         {newAccount ? "Sign In" : "Create Account"}
       </span>
       <div>
-        <button>Continue With Google</button>
+        <button onClick={onSocialClick} name="google">
+          Continue With Google
+        </button>
       </div>
     </div>
   );
