@@ -5,6 +5,7 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { authService, firebaseInstance } from "../fbase";
+import "../css/Auth.css";
 
 const Auth = () => {
   const [email, setEmail] = useState("");
@@ -47,9 +48,11 @@ const Auth = () => {
   };
 
   return (
-    <div>
+    <div className="auth-container">
+      <h2>{newAccount ? "Create Account" : "Sign In"}</h2>
       <form onSubmit={onSubmit}>
         <input
+          className="auth-input"
           name="email"
           type="text"
           placeholder="Email"
@@ -58,6 +61,7 @@ const Auth = () => {
           onChange={onChange}
         />
         <input
+          className="auth-input"
           name="password"
           type="password"
           placeholder="Password"
@@ -66,17 +70,24 @@ const Auth = () => {
           onChange={onChange}
         />
         <input
+          className="auth-button"
           type="submit"
           value={newAccount ? "Create Account" : "Sign In"}
         />
-        {error}
+        {error && <p className="auth-error">{error}</p>}
       </form>
-      <span onClick={toggleAccount}>
-        {newAccount ? "Sign In" : "Create Account"}
+      <span onClick={toggleAccount} className="auth-toggle">
+        {newAccount ? "Already have an account? Sign In" : "Create new account"}
       </span>
-      <div>
-        <button onClick={onSocialClick} name="google">
-          Continue With Google
+      <div className="auth-social-container">
+        <p className="auth-social-text">Or sign in with</p>
+        <button
+          onClick={onSocialClick}
+          name="google"
+          className="auth-social-button"
+        >
+          <i className="fab fa-google auth-social-icon"></i>
+          Google
         </button>
       </div>
     </div>

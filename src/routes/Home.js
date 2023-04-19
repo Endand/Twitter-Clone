@@ -3,7 +3,9 @@ import { dbService, storageService } from "../fbase";
 import Tweet from "../components/Tweet";
 import { ref, uploadString, getDownloadURL } from "@firebase/storage";
 import { v4 as uuid } from "uuid";
-
+import "../css/Home.css";
+import "../css/Navigation.css";
+import "../css/Tweet.css";
 const Home = ({ userObj }) => {
   const [tweet, setTweet] = useState("");
   const [tweets, setTweets] = useState([]);
@@ -62,25 +64,41 @@ const Home = ({ userObj }) => {
   };
 
   return (
-    <div>
-      <form onSubmit={onSubmit}>
-        <input
-          value={tweet}
-          onChange={onChange}
-          type="text"
-          placeholder="What's on your mind?"
-          maxLength={100}
-        />
-        <input type="file" accept="image/*" onChange={onFileChange} />
-        <input type="submit" value="Tweet" />
+    <div className="home-container">
+      <form onSubmit={onSubmit} className="form-container">
+        <div className="form-header">
+          <textarea
+            className="tweet-input"
+            value={tweet}
+            onChange={onChange}
+            type="text"
+            placeholder="What's on your mind?"
+            maxLength={100}
+          />
+        </div>
+        <div className="form-body">
+          <input
+            className="file-input"
+            type="file"
+            accept="image/*"
+            onChange={onFileChange}
+          />
+          <input className="submit-button" type="submit" value="Tweet" />
+        </div>
         {attachment && (
-          <div>
-            <img src={attachment} width="50px" height="50px" />
-            <button onClick={onClearAttachmentClick}>Clear</button>
+          <div className="form-footer">
+            <img
+              className="attachment-preview"
+              src={attachment}
+              alt="attachment"
+            />
+            <button className="clear-button" onClick={onClearAttachmentClick}>
+              Clear
+            </button>
           </div>
         )}
       </form>
-      <div>
+      <div className="tweets-container">
         {tweets.map((tweet) => (
           <Tweet
             key={tweet.id}
@@ -92,5 +110,4 @@ const Home = ({ userObj }) => {
     </div>
   );
 };
-
 export default Home;

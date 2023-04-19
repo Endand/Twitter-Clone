@@ -40,33 +40,54 @@ const Tweet = ({ tweetObj, isOwner }) => {
   const test = { tweetObj };
   console.log(test);
   return (
-    <div>
+    <div className="tweet">
       {editing ? (
-        <>
-          <form onSubmit={onSubmit}>
-            <input
-              type="text"
-              placeholder="Edit your tweet"
-              value={newTweet}
-              onChange={onChange}
-              required
-            />
-            <input type="submit" value="Update Tweet" />
-          </form>
-          <button onClick={toggleEditing}>Cancel</button>
-        </>
+        <form onSubmit={onSubmit}>
+          <input
+            type="text"
+            placeholder="Edit your tweet"
+            value={newTweet}
+            onChange={onChange}
+            required
+            className="tweet__input"
+          />
+          <input
+            type="submit"
+            value="Update"
+            className="tweet__button tweet__button--edit"
+          />
+          <button
+            onClick={toggleEditing}
+            className="tweet__button tweet__button--cancel"
+          >
+            Cancel
+          </button>
+        </form>
       ) : (
         <>
           <h4>{tweetObj.text}</h4>
-
           {tweetObj.attachmentUrl && (
-            <img src={tweetObj.attachmentUrl} width="50px" height="50px" />
+            <img
+              src={tweetObj.attachmentUrl}
+              alt="attachment"
+              className="tweet__image"
+            />
           )}
           {isOwner && (
-            <>
-              <button onClick={toggleEditing}>Edit Tweet</button>
-              <button onClick={onDeleteClick}>Delet Tweet</button>
-            </>
+            <div className="tweet__actions">
+              <button
+                onClick={onDeleteClick}
+                className="tweet__button tweet__button--delete"
+              >
+                Delete
+              </button>
+              <button
+                onClick={toggleEditing}
+                className="tweet__button tweet__button--edit"
+              >
+                Edit
+              </button>
+            </div>
           )}
         </>
       )}
