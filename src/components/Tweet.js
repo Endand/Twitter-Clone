@@ -1,16 +1,23 @@
 import React, { useState } from "react";
-import { dbService } from "../fbase";
+import { dbService, storageService } from "../fbase";
+import { getStorage, deleteObject, ref } from "@firebase/storage";
 
 const Tweet = ({ tweetObj, isOwner }) => {
   const [editing, setEditing] = useState(false);
   const [newTweet, setNewTweet] = useState(tweetObj.text);
+
   const onDeleteClick = async () => {
     const confirm = window.confirm(
       "Are you sure you want to delete this Tweet?"
     );
     if (confirm) {
-      console.log(tweetObj.id);
       await dbService.doc(`tweets/${tweetObj.id}`).delete();
+
+      if (tweetObj.attachmentUrl !== "") {
+        const storage = getStorage();
+        const fileRef = ref(storage, tweetObj.attachmentUrl);
+        await deleteObject(fileRef);
+      }
     }
   };
 
