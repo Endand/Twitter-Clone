@@ -19,7 +19,7 @@ const Tweet = ({ tweetObj, isOwner }) => {
   };
   const onSubmit = async (event) => {
     event.preventDefault();
-    await await dbService.doc(`tweets/${tweetObj.id}`).update({
+    await dbService.doc(`tweets/${tweetObj.id}`).update({
       text: newTweet,
     });
     setEditing(false);
@@ -30,6 +30,8 @@ const Tweet = ({ tweetObj, isOwner }) => {
     } = event;
     setNewTweet(value);
   };
+  const test = { tweetObj };
+  console.log(test);
   return (
     <div>
       {editing ? (
@@ -49,6 +51,10 @@ const Tweet = ({ tweetObj, isOwner }) => {
       ) : (
         <>
           <h4>{tweetObj.text}</h4>
+
+          {tweetObj.attachmentUrl && (
+            <img src={tweetObj.attachmentUrl} width="50px" height="50px" />
+          )}
           {isOwner && (
             <>
               <button onClick={toggleEditing}>Edit Tweet</button>

@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { dbService } from "../fbase";
+import { dbService, storageService } from "../fbase";
 import Tweet from "../components/Tweet";
+import { ref, uploadString, getDownloadURL } from "@firebase/storage";
+import { v4 as uuid } from "uuid";
 
 const Home = ({ userObj }) => {
   const [tweet, setTweet] = useState("");
   const [tweets, setTweets] = useState([]);
-  const [attachment, setAttachment] = useState();
+  const [attachment, setAttachment] = useState("");
   useEffect(() => {
     dbService.collection("tweets").onSnapshot((snapshot) => {
       const tweetArray = snapshot.docs.map((doc) => ({
@@ -17,12 +19,21 @@ const Home = ({ userObj }) => {
   }, []);
   const onSubmit = async (event) => {
     event.preventDefault();
-    await dbService.collection("tweets").add({
+    let attachmentUrl = "";
+    if (attachment !== "") {
+      const attachmentRef = ref(storageService, `${userObj.uid}/${uuid()}`);
+      await uploadString(attachmentRef, attachment, "data_url");
+      attachmentUrl = await getDownloadURL(ref(storageService, attachmentRef));
+    }
+    const tweetObj = {
       text: tweet,
       createdAt: Date.now(),
       creatorId: userObj.uid,
-    });
+      attachmentUrl,
+    };
+    await dbService.collection("tweets").add(tweetObj);
     setTweet("");
+    setAttachment("");
   };
   const onChange = (event) => {
     const {
@@ -47,7 +58,7 @@ const Home = ({ userObj }) => {
   };
 
   const onClearAttachmentClick = () => {
-    setAttachment(null);
+    setAttachment("");
   };
 
   return (
@@ -64,7 +75,7 @@ const Home = ({ userObj }) => {
         <input type="submit" value="Tweet" />
         {attachment && (
           <div>
-            <img src={attachment} />
+            <img src={attachment} width="50px" height="50px" />
             <button onClick={onClearAttachmentClick}>Clear</button>
           </div>
         )}
